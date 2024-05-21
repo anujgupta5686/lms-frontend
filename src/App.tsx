@@ -5,6 +5,9 @@ import Book from "./components/pages/book"
 import Contact from "./components/pages/contact"
 import About from "./components/pages/about"
 import Footer from "./components/layout/Footer"
+import ForgetPassword from "./components/pages/forgetPassword"
+import OTPPage from "./components/pages/forgetPassword/OTPPage"
+// import OTPPage from "./components/pages/forgetPassword/OTPPage"
 function App() {
   return (
     <>
@@ -15,6 +18,8 @@ function App() {
           <Route path="/books" element={<Book />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/forgot-password" element={<ForgetPassword />} />
+          <Route path="/otp-page" element={<OTPPage />} />
         </Routes>
         <Footer />
       </div>

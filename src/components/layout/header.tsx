@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.svg";
-import { Input } from "../ui/input";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { NavbarLinks } from "../../data/navbar-links";
@@ -10,27 +9,59 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    DropdownMenuLabel,
 } from "../ui/dropdown-menu";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link, useNavigate, useLocation, matchPath } from "react-router-dom";
 import { Button } from "../ui/button";
+import SignupLogin from "../SignupLogin";
+import { categories } from "@/services/apis";
+import { useSelector } from "react-redux";
 
+// import { setLoading } from "@/slices/authSlice";
+import { apiConnector } from "@/services/apiconnector";
 interface NavbarLink {
     title: string;
     path?: string;
 }
+interface SubLink {
+    name: string;
+    _id: number
+}
 
 const Header: React.FC = () => {
+    const location = useLocation();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [userLogin, setUserLogin] = useState<boolean>(false);
     const [userAuth, setUserAuth] = useState<boolean>(false);
-    const location = useLocation();
+    const [subLinks, setSubLinks] = useState<SubLink[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const { token } = useSelector((state: any) => state.auth);
     const navigate = useNavigate();
 
     const matchRoute = (route: string | undefined) => {
         return route ? !!matchPath({ path: route }, location.pathname) : false;
     };
 
+
+    const fetchCategory = async () => {
+        setLoading(true);
+        try {
+            const res = await apiConnector({
+                method: 'GET',
+                url: categories.CATEGORIES_API,
+            });
+            console.log("Response", res);
+            setSubLinks(res.data.data);
+        } catch (err) {
+            console.error("Could not fetch category", err);
+        }
+        setLoading(false);
+    };
+    console.log("Data inside category", subLinks);
+    useEffect(() => {
+        fetchCategory();
+    }, []);
     return (
         <nav className="flex justify-between px-5 lg:px-12 items-center h-[72px] py-2 md:py-5 border-b">
             <Link to="/">
@@ -50,21 +81,20 @@ const Header: React.FC = () => {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
                                             {/* <DropdownMenuSeparator /> */}
-                                            <DropdownMenuItem onClick={() => alert("Download started")}>
-                                                Mathematics
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => alert("Download started")}>
-                                                ReactJS
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => alert("Download started")}>
-                                                Java 6 Edition
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => alert("Download started")}>
-                                                Machine Learning
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => alert("Download started")}>
-                                                English
-                                            </DropdownMenuItem>
+                                            {loading ? <p>Loading...</p> : (
+                                                subLinks.length > 0 ? (
+                                                    subLinks.map((link) => (
+                                                        <DropdownMenuItem key={link._id} onClick={() => alert("Download started")}>
+                                                            <p>{link.name}</p>
+                                                        </DropdownMenuItem>
+                                                    ))
+
+                                                ) : (
+                                                    <DropdownMenuItem onClick={() => alert("Download started")}>
+                                                        Category not found
+                                                    </DropdownMenuItem>
+                                                )
+                                            )}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 ) : (
@@ -83,8 +113,8 @@ const Header: React.FC = () => {
                         ))}
                     </ul>
                 </nav>
-            </div>
-            {userAuth && (
+            </div >
+            {token && (
                 <div className="info flex gap-3 lg:gap-8 py-2 unselectable">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -136,14 +166,23 @@ const Header: React.FC = () => {
                     </div>
                 </div>
             )}
-            {!userLogin && (
-                <div>
-                    <Button variant={"ghost"} className="border border-slate-500">
-                        Sign-in
-                    </Button>
-                </div>
-            )}
-        </nav>
+            {
+                token === null && (
+                    <div onClick={() => setIsOpen(true)}>
+                        <Button variant={"ghost"} className="border border-slate-500">
+                            Sign-in
+                        </Button>
+                    </div>
+                )
+            }
+
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogContent className="max-w-[360px] md:max-w-[625px]">
+                    <SignupLogin setIsOpen={setIsOpen} />
+                </DialogContent>
+            </Dialog>
+        </nav >
+
     );
 };
 

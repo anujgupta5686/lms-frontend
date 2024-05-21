@@ -4,6 +4,7 @@ import flexible from '../../assets/flexible-work.png';
 import access from '../../assets/access-to-renowned.png';
 import weekend from '../../assets/weekend-live.jpg';
 import business from '../../assets/gifImage.gif';
+import blobImage from '../../assets/blob.svg';
 
 const WhyChooseLMS: React.FC = () => {
     return (
@@ -50,9 +51,13 @@ const WhyChooseLMS: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-center items-center">
-                    <img src={business} alt="Responsive Learning" className="h-full w-full object-contain max-h-96" />
+                {/* <div className="relative flex justify-center items-center h-auto w-full bg-cover bg-center" style={{ backgroundImage: `url(${blobImage})` }}> */}
+                <div className="relative flex justify-center items-center h-auto w-full bg-cover bg-center">
+                    {/* Main image */}
+                    {/* <img src={blobImage} alt="Background Blob" className="absolute inset-0 h-full w-full object-cover z-0" /> */}
+                    <img src={business} alt="Responsive Learning" className="relative max-h-96 w-auto object-contain z-10" />
                 </div>
+
             </div>
         </div>
     );
