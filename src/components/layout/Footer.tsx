@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
     return (
         <>
             <div className="w-full relative">
-                <svg
+                {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 1440 320"
                     className="block w-full"
@@ -17,8 +17,8 @@ const Footer: React.FC = () => {
                         fillOpacity="1"
                         d="M0,160L80,186.7C160,213,320,267,480,272C640,277,800,235,960,224C1120,213,1280,235,1360,245.3L1440,256L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
                     ></path>
-                </svg>
-                <footer className="bg-[#C80B45] text-white pt-10 pb-10 relative z-10">
+                </svg> */}
+                <footer className="bg-[#2a2325] text-white pt-10 pb-10 relative z-10">
                     <div className="container mx-auto px-4">
                         <div className="flex flex-col md:flex-row items-center justify-between">
                             {/* Logo and Navigation */}
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
 
                         {/* Bottom Section */}
                         <div className="mt-8 text-center md:text-left">
-                            <p className="text-white">Made with by Anuj Kumar Gupta © 2023 Library Manage System</p>
+                            <p className="text-white">Made with by Anuj Kumar Gupta © 2023 Library Management System</p>
                         </div>
                     </div>
                 </footer>

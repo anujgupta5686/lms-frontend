@@ -1,52 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import OtpInput from 'react-otp-input';
 import './otpStyle.css';
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { sendOtp, signup } from '@/services/operations/authAPI';
 import { useNavigate } from "react-router-dom";
+import Spinner from '../spinner';
+import { verifyAndSignup } from '@/services/operations/authAPI'; // Import your thunk action
 
 export default function OTPPage() {
     const [otp, setOtp] = useState('');
     const { signupData, loading } = useSelector((state: any) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     useEffect(() => {
-        // Only allow access of this route when user has filled the signup form
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        if (!signupData) {
+            navigate("/signup");
+        }
+    }, [signupData, navigate]);
 
     const handleVerifyAndSignup = (e: any) => {
         e.preventDefault();
-        const {
-            role,
-            firstName,
-            lastName,
-            email,
-            password,
-            confirmPassword,
-        } = signupData;
-        dispatch(
-            signup(
-                role,
-                firstName,
-                lastName,
-                email,
-                password,
-                confirmPassword,
-                otp,
-                navigate
-            )
-        );
-    }
-
+        if (signupData) {
+            console.log('signupData in otp page', signupData, "And OTP = ", otp);
+            const { role, firstName, lastName, email, password, confirmPassword } = signupData;
+            dispatch(verifyAndSignup({ role, firstName, lastName, email, password, confirmPassword, otp, navigate }));
+        }
+    };
 
     return (
         <div className="flex justify-center items-center h-screen">
             {
                 loading ? (
                     <div>
-                        <div className="spinner">Loading...</div>
+                        <Spinner />
                     </div>
                 ) : (
                     <div className="bg-sky-400 rounded-lg shadow-lg p-8 max-w-md w-full relative animate-border-multiple border-4 border-transparent">
@@ -65,6 +51,7 @@ export default function OTPPage() {
                             <p className="text-blue-950 text-md mb-6 text-center">Enter the 6-digit code sent to your phone</p>
 
                             <button
+                                type="submit"
                                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
                             >
                                 Submit
@@ -74,7 +61,6 @@ export default function OTPPage() {
                     </div>
                 )
             }
-
         </div>
     );
 }

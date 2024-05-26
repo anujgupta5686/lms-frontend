@@ -14,7 +14,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Link, useNavigate, useLocation, matchPath } from "react-router-dom";
 import { Button } from "../ui/button";
-import SignupLogin from "../SignupLogin";
+// import SignupLogin from "../SignupLogin";
 import { categories } from "@/services/apis";
 import { useSelector } from "react-redux";
 
@@ -116,19 +116,14 @@ const Header: React.FC = () => {
             </div >
             {token && (
                 <div className="info flex gap-3 lg:gap-8 py-2 unselectable">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <button className="relative inline-flex items-center p-3 text-sm font-medium text-center rounded-full">
-                                <FaShoppingCart className="size-6 md:size-7" />
-                                <div className="absolute inline-flex items-center justify-center size-5 md:size-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full right-0 top-2 md:top-3">
-                                    1
-                                </div>
-                            </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            {/* <Notification /> */}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Link to={"/shipping-cart"}>
+                        <button className="relative inline-flex items-center p-3 text-sm font-medium text-center rounded-full">
+                            <FaShoppingCart className="size-6 md:size-7" />
+                            <div className="absolute inline-flex items-center justify-center size-5 md:size-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full right-0 top-2 md:top-3">
+                                12
+                            </div>
+                        </button>
+                    </Link>
                     <div className="profile lg:px-1 bg-gray-200 rounded-full flex items-center my-2">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -166,21 +161,34 @@ const Header: React.FC = () => {
                     </div>
                 </div>
             )}
-            {
-                token === null && (
-                    <div onClick={() => setIsOpen(true)}>
-                        <Button variant={"ghost"} className="border border-slate-500">
-                            Sign-in
-                        </Button>
-                    </div>
-                )
-            }
+            <div className="flex items-center gap-2">
+                {
+                    token === null && (
+                        <div>
+                            <Link to="/login">
+                                <Button size={"sm"}>
+                                    Login
+                                </Button>
+                            </Link>
+                        </div>
+                    )
+                }
+                {
+                    token === null && (
+                        <Link to="/signup">
+                            <Button size={"sm"} variant={"destructive"}>
+                                Signup
+                            </Button>
+                        </Link>
+                    )
+                }
+            </div>
 
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            {/* <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="max-w-[360px] md:max-w-[625px]">
                     <SignupLogin setIsOpen={setIsOpen} />
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
         </nav >
 
     );
